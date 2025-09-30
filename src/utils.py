@@ -6,6 +6,12 @@ import json
 from src.exception import CustomException
 from src.logger import logging
 
+import pandas as pd
+import numpy as np
+
+from sklearn.model_selection import GridSearchCV
+from sklearn.metrics import accuracy_score, jaccard_score, precision_score, recall_score, f1_score, confusion_matrix, classification_report
+
 def save_object(obj, file_path):
     try:
         dir_path = os.path.dirname(file_path)
@@ -15,4 +21,86 @@ def save_object(obj, file_path):
             joblib.dump(obj, file_path)
 
     except Exception as e:
-        CustomException(e, sys)
+        raise CustomException(e, sys)
+
+
+def load_object(file_path):
+    try:
+        with open(file_path, 'rb') as file_obj:
+            return joblib.load(file_path)
+        
+    except Exception as e:
+        raise CustomException(e, sys)
+
+
+def get_metrics(true, predicted):
+    try:
+        acc = accuracy_score(true, predicted)
+        jac = jaccard_score(true, predicted)
+        prec = precision_score(true, predicted, average='weighted', zero_division=0)
+        rec = recall_score(true, predicted, average='weighted')
+        f1 = f1_score(true, predicted, average='weighted')
+
+        metrics = {
+            'Accuracy': acc,
+            'Jaccard': jac,
+            'Precision': prec,
+            'Recall': rec,
+            'F1 Score': f1
+        }
+
+        return metrics
+
+    except Exception as e:
+        raise CustomException(e, sys)
+
+
+
+def evaluate_models(X_train, y_train, X_test, y_test, models: dict, params: dict):
+    try:
+        report = []
+        best_model = None
+        best_score = - np.inf
+
+
+        for model_name, model in models.items():
+            grid = GridSearchCV(
+                estimator= model,
+                param_grid= params[model_name],
+                cv= 5,
+                scoring= 'accuracy',
+                n_jobs= -1,
+                error_score= 'raise'
+            )
+
+            grid.fit(X_train, y_train)
+            best_estimator = grid.best_estimator_
+            best_param = grid.best_params_
+
+            y_pred_train= best_estimator.predict(X_train)
+            y_pred_test= best_estimator.predict(X_test)
+
+            metrics_train = get_metrics(y_train, y_pred_train)
+            metrics_test = get_metrics(y_test, y_pred_test)
+
+            report.append({
+                'Model': model_name,
+                'Best Params': best_param,
+                'Train Accuracy': metrics_train['Accuracy'],
+                'Test Accuracy': metrics_test['Accuracy'],
+                'Test Jaccard': metrics_test['Jaccard'],
+                'Test Precision': metrics_test['Precision'],
+                'Test Recall': metrics_test['Recall'],
+                'Test F1': metrics_test['F1 Score'],
+            })
+
+
+            if metrics_test['Accuracy'] > best_score:
+                best_model = best_estimator
+                best_score = metrics_test['Accuracy']
+
+        report_df = pd.DataFrame(report).sort_values(by=['Test Accuracy'], ascending=False)
+        return best_model, report_df
+
+    except Exception as e:
+        raise CustomException(e, sys)
