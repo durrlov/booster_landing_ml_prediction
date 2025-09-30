@@ -10,7 +10,7 @@ import pandas as pd
 import numpy as np
 
 from sklearn.model_selection import GridSearchCV
-from sklearn.metrics import accuracy_score, jaccard_score, precision_score, recall_score, f1_score, confusion_matrix, classification_report
+from sklearn.metrics import accuracy_score, jaccard_score, precision_score, recall_score, f1_score, roc_auc_score, confusion_matrix, classification_report
 
 def save_object(obj, file_path):
     try:
@@ -33,7 +33,7 @@ def load_object(file_path):
         raise CustomException(e, sys)
 
 
-def get_metrics(true, predicted):
+def get_metrics(true, predicted, predicted_proba= None):
     try:
         acc = accuracy_score(true, predicted)
         jac = jaccard_score(true, predicted)
@@ -49,6 +49,10 @@ def get_metrics(true, predicted):
             'F1 Score': f1
         }
 
+        if predicted_proba is not None and len(np.unique(true)) == 2:
+            auc = roc_auc_score(true, predicted_proba[:, 1])
+            metrics['ROC AUC'] = auc
+            
         return metrics
 
     except Exception as e:
@@ -79,9 +83,10 @@ def evaluate_models(X_train, y_train, X_test, y_test, models: dict, params: dict
 
             y_pred_train= best_estimator.predict(X_train)
             y_pred_test= best_estimator.predict(X_test)
+            y_proba_test = best_estimator.predict_proba(X_test) if hasattr(best_estimator, 'predict_proba') else None
 
             metrics_train = get_metrics(y_train, y_pred_train)
-            metrics_test = get_metrics(y_test, y_pred_test)
+            metrics_test = get_metrics(y_test, y_pred_test, y_proba_test)
 
             report.append({
                 'Model': model_name,
@@ -92,10 +97,11 @@ def evaluate_models(X_train, y_train, X_test, y_test, models: dict, params: dict
                 'Test Precision': metrics_test['Precision'],
                 'Test Recall': metrics_test['Recall'],
                 'Test F1': metrics_test['F1 Score'],
+                'Test ROC AUC': metrics_test.get('ROC AUC', None)
             })
 
 
-            if metrics_test['Accuracy'] > best_score:
+            if metrics_test['Accuracy'] >= best_score:
                 best_model = best_estimator
                 best_score = metrics_test['Accuracy']
 

@@ -32,6 +32,8 @@ class ModelTrainer:
 
     def initiate_model_trainer(self, train_arr, test_arr):
         try:
+            logging.info(f"Starting model trainging process")
+
             X_train, y_train = train_arr[:, :-1], train_arr[:, -1]
             X_test, y_test = test_arr[:, :-1], test_arr[:, -1]
 
@@ -100,17 +102,16 @@ class ModelTrainer:
                     'l2_leaf_reg': [1, 3, 5, 9]
                 }
             }
-            
-            logging.info(f"Transforming the evaluation reports into a DataFrame and selecting the best model")
 
             best_model, report_df = evaluate_models(
                 X_train= X_train, y_train= y_train, X_test= X_test, y_test= y_test,
                 models= models, params= params
             )
 
-            logging.info(f'Best Model: {best_model}')
+            logging.info(f"Evaluation report")
+            logging.info("\n" + report_df.to_string(index= False))
 
-            logging.info("Saving the best model")
+            logging.info("Saving the best model to artifacts")
             save_object(
                 file_path= self.model_trainer_config.trained_model_file_path,
                 obj= best_model
@@ -118,7 +119,7 @@ class ModelTrainer:
 
             report_df.to_csv(self.model_trainer_config.grid_report_file_path, index= False)
 
-            return best_model, report_df
+            return best_model.__class__.__name__
 
 
         except Exception as e:

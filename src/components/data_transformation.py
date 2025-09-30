@@ -99,12 +99,14 @@ class DataTransformation:
 
     def initiate_data_transformation(self, train_path, test_path):
         try:
+            logging.info("Starting data transformation process")
+
             logging.info("Reading train and test data")
             train_df = pd.read_csv(train_path)
             test_df = pd.read_csv(test_path)
 
 
-            logging.info("Preprocessing Date")
+            logging.info("Preprocessing date")
             train_df = self.preprocess_date(train_df)
             test_df = self.preprocess_date(test_df)
 
@@ -119,7 +121,7 @@ class DataTransformation:
             target_feature_test_df = test_df[target_column_name]
 
             
-            logging.info("Applying Preprocessor on training and test dataframe")
+            logging.info("Applying preprocessor on training and test dataframe")
             preprocessor_obj = self.get_data_transformer_object()
 
             input_feature_train_array = preprocessor_obj.fit_transform(input_feature_train_df).toarray()
@@ -130,7 +132,7 @@ class DataTransformation:
             test_arr = np.c_[input_feature_test_array, np.array(target_feature_test_df)]
 
 
-            logging.info("Saving Preprocessor Object")
+            logging.info("Saving preprocessor object to artifacts")
             save_object(
                 file_path= self.data_transformation_config.preprocessor_obj_file_path,
                 obj= preprocessor_obj
