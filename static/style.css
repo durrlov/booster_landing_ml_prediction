@@ -1,0 +1,153 @@
+/* Import Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+/* Base Reset and Font */
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background-color: #f9f9fb;
+  color: #333;
+  line-height: 1.6;
+}
+
+/* Fixed Header */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 50px;
+  background: linear-gradient(to right, #235fb8, #1e3c72);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  padding: 0 30px;
+  color: white;
+}
+
+/* Top-right Buttons */
+.top-right-buttons {
+  margin-left: auto;
+  display: flex;
+  gap: 12px;
+}
+
+/* .nav-button {
+  padding: 10px 20px;
+  font-size: 15px;
+  background-color: #ffffff22;
+  color: #fff;
+  text-decoration: none;
+  border: 1px solid #fff;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.nav-button:hover {
+  background-color: #ffffff44;
+  transform: scale(1.05);
+} */
+
+.nav-button {
+  font-size: 15px;
+  color: #ffffff;
+  text-decoration: none;
+  padding: 8px 12px;
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+.nav-button::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0%;
+  height: 2px;
+  background-color: #ffffff;
+  transition: width 0.3s ease;
+}
+
+.nav-button:hover {
+  color: #e0e0ff;
+}
+
+.nav-button:hover::after {
+  width: 100%;
+}
+
+/* Offset Content */
+.offset-header {
+  margin-top: 100px;
+  padding: 40px 20px;
+  max-width: 960px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Card Styling */
+.card {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  padding: 30px;
+}
+
+/* Form Section Headers */
+form h4 {
+  font-weight: 600;
+  margin-top: 30px;
+  margin-bottom: 15px;
+  color: #235fb8;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 30px 20px;
+  color: #888;
+  font-size: 14px;
+  background-color: #f0f0f5;
+  border-top: 1px solid #ddd;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .header {
+    flex-direction: column;
+    height: auto;
+    padding: 20px;
+    text-align: center;
+  }
+
+  .top-right-buttons {
+    margin: 10px 0 0;
+    justify-content: center;
+  }
+
+  .nav-button {
+    font-size: 14px;
+    padding: 8px 16px;
+  }
+
+  .offset-header {
+    padding: 20px;
+  }
+}
+
+/* Form Submit Button */
+.form-submit-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #235fb8;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.form-submit-button:hover {
+  background-color: #09135f;
+}
