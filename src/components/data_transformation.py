@@ -3,7 +3,7 @@ import sys
 
 from src.exception import CustomException
 from src.logger import logging
-from src.utils import save_object
+from src.utils import save_object, preprocess_date
 
 import pandas as pd
 import numpy as np
@@ -27,7 +27,7 @@ class DataTransformation:
     def get_data_transformer_object(self):
         try:
             num_columns = ['FlightNumber', 'PayloadMass', 'Flights', 'Block', 'ReusedCount', 'Longitude', 'Latitude', 'Year', 'Month', 'DayOfWeek']
-            cat_columns = ['BoosterVersion', 'Orbit', 'LaunchSite', 'LandingPad', 'Serial']
+            cat_columns = ['BoosterVersion', 'Orbit', 'LaunchSite', 'LandingPad']
             bool_columns = ['GridFins', 'Reused', 'Legs']
 
             num_pipeline = Pipeline(
@@ -82,18 +82,7 @@ class DataTransformation:
         
     
 
-    def preprocess_date(self, df: pd.DataFrame):
-        try:
-            df['Date'] = pd.to_datetime(df['Date'], errors= 'coerce')
-            df['Year'] = df['Date'].dt.year
-            df['Month'] = df['Date'].dt.month
-            df['DayOfWeek'] = df['Date'].dt.dayofweek
-            df = df.drop(['Date'], axis = 1)
 
-            return df
-
-        except Exception as e:
-            raise CustomException(e, sys)
 
 
 
@@ -107,25 +96,27 @@ class DataTransformation:
 
 
             logging.info("Preprocessing date")
-            train_df = self.preprocess_date(train_df)
-            test_df = self.preprocess_date(test_df)
+            train_df = preprocess_date(train_df)
+            test_df = preprocess_date(test_df)
 
 
             logging.info("Separating input features and target")
             target_column_name = "Outcome"
 
-            input_feature_train_df = train_df.drop(target_column_name, axis= 1)
+            input_feature_train_df = train_df.drop([target_column_name, 'Serial'], axis= 1)
             target_feature_train_df = train_df[target_column_name]
 
-            input_feature_test_df = test_df.drop(target_column_name, axis= 1)
+            input_feature_test_df = test_df.drop([target_column_name, 'Serial'], axis= 1)
             target_feature_test_df = test_df[target_column_name]
 
             
             logging.info("Applying preprocessor on training and test dataframe")
             preprocessor_obj = self.get_data_transformer_object()
 
-            input_feature_train_array = preprocessor_obj.fit_transform(input_feature_train_df).toarray()
-            input_feature_test_array = preprocessor_obj.transform(input_feature_test_df).toarray()
+            # input_feature_train_array = preprocessor_obj.fit_transform(input_feature_train_df).toarray()
+            # input_feature_test_array = preprocessor_obj.transform(input_feature_test_df).toarray()
+            input_feature_train_array = preprocessor_obj.fit_transform(input_feature_train_df)
+            input_feature_test_array = preprocessor_obj.transform(input_feature_test_df)
             
 
             train_arr = np.c_[input_feature_train_array, np.array(target_feature_train_df)]

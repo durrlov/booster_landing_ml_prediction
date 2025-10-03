@@ -31,6 +31,20 @@ def load_object(file_path):
         
     except Exception as e:
         raise CustomException(e, sys)
+    
+
+def preprocess_date(df: pd.DataFrame) -> pd.DataFrame:
+    try:
+        df['Date'] = pd.to_datetime(df['Date'], errors= 'coerce')
+        df['Year'] = df['Date'].dt.year
+        df['Month'] = df['Date'].dt.month
+        df['DayOfWeek'] = df['Date'].dt.dayofweek
+        df = df.drop(['Date'], axis = 1)
+
+        return df
+
+    except Exception as e:
+        raise CustomException(e, sys)
 
 
 def get_metrics(true, predicted, predicted_proba= None):
