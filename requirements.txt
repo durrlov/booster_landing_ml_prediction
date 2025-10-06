@@ -8,4 +8,4 @@ catboost
 requests
 joblib
 Flask
-#-e .
+gunicorn
