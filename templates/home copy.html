@@ -21,31 +21,20 @@
     </div>
   </header>
 
-  <main class="container-sm offset-header">
-    <div class="text-center mb-5">
-      <h1 class="display-7 fw-bold">Landing Outcome Prediction</h1>
-    </div>
-
-
   <!-- Form Container -->
+  <div class="container-sm offset-header">
     <div class="card shadow p-4 mb-5 bg-white rounded">
-      <p class="text-center text-muted mb-2">Enter the details of your Rocket Launch to <strong>PREDICT</strong> it's booster landing <strong>Outcome</strong> !!!</p>
+      <h1 class="text-center mb-4">Landing Outcome Prediction</h1>
+      <p class="text-center text-muted mb-4">Enter the details of your Rocket to <strong>PREDICT</strong> it's booster landing outcome !!!</p>
 
     <!-- Prediction Result -->
     {% if results %}
-      {% if results == 'Success' %}
-        <div class="alert alert-success text-center mt-4">
-          <h2>The Landing is gonna be a {{ results }}</h2>
-        </div>
-      {% else %}
-        <div class="alert alert-danger text-center mt-4">
-          <h2>The Landing is gonna be a {{ results }}</h2>
-        </div>
-      {% endif %}
+      <div class="alert alert-success text-center mt-4">
+        <h2>The Landing is gonna be a {{ results }}</h2>
+      </div>
     {% endif %}
-    </div>
+  </div>
 
-    <div class="card shadow p-4 mb-5 bg-white rounded">
       <form action="{{ url_for('predict_datapoint') }}" method="post">
         <h4>Mission Details</h4>
 
@@ -226,14 +215,10 @@
       }
     }
   </script>
-  </main>
 
   <!-- Footer -->
-  <footer class="text-center py-4">
-    &copy; 2025 S M Bakhtiar &nbsp;|&nbsp;
-    <a href="https://www.linkedin.com/in/durrlov/" target="_blank">LinkedIn</a> &nbsp;|&nbsp;
-    <a href="mailto:bakhtiar.scr@gmail.com">Email</a>
+  <footer>
+    &copy; 2025 S M Bakhtiar
   </footer>
-  
 </body>
 </html>

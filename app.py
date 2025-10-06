@@ -13,6 +13,10 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')
 
+@app.route('/overview')
+def project_overview():
+    return render_template('overview.html')
+
 @app.route('/predictdata', methods= ['GET', 'POST'])
 def predict_datapoint():
     if request.method == 'GET':
@@ -40,14 +44,13 @@ def predict_datapoint():
         print(input_df)
 
         predict_pipeline = PredictPipeline()
-        results = predict_pipeline.predict(input_df)
-        print(results)
-
-        outcome = 'Success' if results[0] == 1 else "Failure"
+        outcome = predict_pipeline.predict(input_df)
         print(outcome)
 
-        #return render_template('home.html', results[0])
-        return render_template('home.html', results= outcome)
+        results = 'Success' if outcome[0] == 1 else "Failure"
+        print(results)
+
+        return render_template('home.html', results= results)
     
 
 if __name__ == "__main__":

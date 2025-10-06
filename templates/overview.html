@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SpaceX Falcon 9 Landing Prediction Project</title>
+
+  <!-- Bootstrap & Custom Styles -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="top-right-buttons">
+      <a href="/" class="nav-button">Home</a>
+      <a href="/predictdata" class="nav-button">Live Predictor</a>
+      <a href="/overview" class="nav-button">Project Overview</a>
+      <a href="https://github.com/durrlov/booster_landing_ml_prediction" class="nav-button" target="_blank">GitHub Repo</a>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container-sm offset-header">
+
+    <!-- Project Title -->
+    <div class="text-center mb-5">
+      <h1 class="display-7 fw-bold">Project Overview & Documentation</h1>
+      <p class="text-muted">
+        Developed by <a href="https://www.linkedin.com/in/durrlov/">S M Bakhtiar</a>
+      </p>
+    </div>
+
+    <!-- Important Links -->
+    <div class="card shadow p-4 mb-5 bg-white rounded">
+      <h2 class="fw-bold">Important Project Links</h2>
+      <p class="fs-5"><a href="https://github.com/durrlov/booster_landing_ml_prediction/blob/main/notebook/03_eda.ipynb" target="_blank">Exploratory Data Analysis Notebook 🔗</a></p>
+    </div>
+
+    <!-- Table of Contents -->
+<!-- Updated Table of Contents (includes nested 10.1 - 10.3) -->
+<div class="card shadow p-4 mb-5 bg-white rounded">
+  <h2 class="fw-bold">Table of Contents</h2>
+  <ul class="fs-5">
+    <li><a href="#introduction">1. Introduction</a></li>
+    <li><a href="#problem">2. Problem Statement</a></li>
+    <li><a href="#dataset">3. Dataset Overview</a></li>
+    <li><a href="#eda">4. Exploratory Data Analysis (EDA)</a></li>
+    <li><a href="#preprocessing">5. Data Preprocessing & Feature Engineering</a></li>
+    <li><a href="#model">6. Model Selection & Training</a></li>
+    <li><a href="#evaluation">7. Model Evaluation</a></li>
+    <li><a href="#conclusion">8. Conclusion & Insights</a></li>
+    <li><a href="#deployment">9. Deployment</a></li>
+    <li>
+      <a href="#modular">10. Modular Project Architecture & Engineering Practices</a>
+      <ul>
+        <li><a href="#components">10.1. Components Breakdown</a></li>
+        <li><a href="#support">10.2. Utility and Support Modules</a></li>
+        <li><a href="#configuration">10.3. Configuration & Packaging</a></li>
+      </ul>
+    </li>
+    <li><a href="#summary">11. Summary</a></li>
+  </ul>
+</div>
+
+
+    <!-- Sections -->
+
+    <!-- 1. Introduction -->
+    <div class="card shadow p-4 mb-5 bg-white rounded" id="introduction">
+      <h2 class="fw-bold">1. Introduction</h2>
+      <p class="fs-5 text-justify">
+        This project showcases an <strong>end-to-end machine learning pipeline</strong> designed to predict whether the <strong>first stage (booster) of a SpaceX Falcon 9 rocket</strong> will successfully re-land.
+      </p>
+      <p class="fs-5 text-justify">
+        This integrates:
+        <ul>
+          <li>Data collection from SpaceX API</li>
+          <li>Data cleaning and feature engineering</li>
+          <li>Exploratory Data Analysis (EDA)</li>
+          <li>Model training with multiple ML algorithms</li>
+          <li>Hyperparameter tuning and model selection</li>
+          <li>Flask app for interactive user prediction</li>
+          <li>Deployment on Render</li>
+        </ul>
+      </p>
+    </div>
+
+    <!-- 2. Problem Statement -->
+    <div class="card shadow p-4 mb-5 bg-white rounded" id="problem">
+      <h2 class="fw-bold">2. Problem Statement</h2>
+      <p class="fs-5 text-justify">
+        SpaceX advertises Falcon 9 rocket launches with a cost of 62 million dollars; other providers cost upward of 165 million dollars each, much of the savings is because SpaceX can reuse the first stage (booster).
+      </p>
+      <p class="fs-5 text-justify">
+        Therefore we aim to determine whether the first stage will land successfully or not. This information can be used if an alternate company wants to bid against SpaceX for a rocket launch.
+      </p>
+    </div>
+
+<!-- 3. Dataset Overview -->
+<div class="card shadow p-4 mb-5 bg-white rounded" id="dataset">
+  <h2 class="fw-bold">3. Dataset Overview</h2>
+
+  <p class="fs-5"><strong>Source:</strong></p>
+  <p class="fs-5">Collected data from SpaceX REST APIs:</p>
+  <ul class="fs-5">
+    <li>https://api.spacexdata.com/v4/launches/past/</li>
+    <li>https://api.spacexdata.com/v4/rockets/</li>
+    <li>https://api.spacexdata.com/v4/launchpads/</li>
+    <li>https://api.spacexdata.com/v4/payloads/</li>
+    <li>https://api.spacexdata.com/v4/cores/</li>
+  </ul>
+
+  <p class="fs-5"><strong>Target Variable:</strong><br>
+  Outcome: preprocessed to binary classification</p>
+  <ul class="fs-5">
+    <li>Success = 1</li>
+    <li>Failure = 0</li>
+  </ul>
+
+  <p class="fs-5"><strong>Features:</strong></p>
+  <table class="table table-bordered fs-6">
+    <thead>
+      <tr>
+        <th>Column</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>FlightNumber</td><td>Sequential number assigned to each SpaceX launch.</td></tr>
+      <tr><td>Date</td><td>Launch date of the mission.</td></tr>
+      <tr><td>BoosterVersion</td><td>Specific Falcon 9 booster version used for the mission.</td></tr>
+      <tr><td>PayloadMass</td><td>Mass of the payload carried by the rocket (in kilograms).</td></tr>
+      <tr><td>Orbit</td><td>Type of orbit the payload was delivered to (e.g., LEO, GTO).</td></tr>
+      <tr><td>LaunchSite</td><td>Location from where the rocket was launched.</td></tr>
+      <tr><td>Flights</td><td>Total missions for this booster (including the current one).</td></tr>
+      <tr><td>GridFins</td><td>Whether grid fins were present on the booster (True/False).</td></tr>
+      <tr><td>Reused</td><td>Whether the booster was previously reused (True/False).</td></tr>
+      <tr><td>Legs</td><td>Whether the booster had landing legs (True/False).</td></tr>
+      <tr><td>LandingPad</td><td>Landing location of the booster (e.g., drone ship, ground pad).</td></tr>
+      <tr><td>Block</td><td>Version block of the Falcon 9 booster, indicating design upgrades.</td></tr>
+      <tr><td>ReusedCount</td><td>Number of times the booster had been reused before the flight.</td></tr>
+      <tr><td>Serial</td><td>Unique identifier for the rocket booster.</td></tr>
+      <tr><td>Longitude</td><td>Longitude coordinate of the launch site.</td></tr>
+      <tr><td>Latitude</td><td>Latitude coordinate of the launch site.</td></tr>
+    </tbody>
+  </table>
+
+  <p class="fs-5"><strong>Rows:</strong> 168 Launches</p>
+
+  <p class="fs-5"><strong>Missing Values:</strong></p>
+  <ul class="fs-5">
+    <li>PayloadMass: 22</li>
+    <li>LandingPad: 26</li>
+    <li>Orbit: 1</li>
+  </ul>
+</div>
+
+
+    <!-- 4. EDA -->
+    <div class="card shadow p-4 mb-5 bg-white rounded" id="eda">
+      <h2 class="fw-bold">4. Exploratory Data Analysis (EDA)</h2>
+      <ul class="fs-5">
+        <li><strong>Univariate Analysis:</strong>
+          <ul>
+            <li>Barchart for different categorical and boolean features</li>
+            <li>Histogram, Boxplot, and Violinplot for different numerical features</li>
+          </ul>
+        </li>
+        <li><strong>Bivariate Analysis:</strong>
+          <ul>
+            <li>Landing Success rate for categorical and boolean features</li>
+            <li>Pairwise relationships among  different categorical and numerical features</li>
+          </ul>
+        </li>
+        <li>Correlation table and correlation heatmap</li>
+        <li>Temporal trends of successful landings</li>
+      </ul>
+    </div>
+
+    <!-- 5. Data Preprocessing -->
+    <div class="card shadow p-4 mb-5 bg-white rounded" id="preprocessing">
+      <h2 class="fw-bold">5. Data Preprocessing & Feature Engineering</h2>
+      <ul class="fs-5">
+        <li>Categorical Encoding: OneHotEncoder for all categorical features</li>
+        <li>Boolean Transformation: Converted boolean values (True/False) to numeric (1/0)</li>
+        <li>Feature Scaling: StandardScaler for numerical features</li>
+        <li>Pipeline: ColumnTransformer used to combine transformations</li>
+        <li>Artifacts Saved: Preprocessor pipeline saved using pickle (.pkl) for reuse during inference</li>
+      </ul>
+    </div>
+
+<!-- 6. Model Selection & Training -->
+<div class="card shadow p-4 mb-5 bg-white rounded" id="model">
+  <h2 class="fw-bold">6. Model Selection & Training</h2>
+
+  <ul class="fs-5">
+    <li><strong>Models evaluated:</strong>
+      <ul>
+        <li>Logistic Regression</li>
+        <li>Decision Tree</li>
+        <li>K-Nearest Neighbors</li>
+        <li>Random Forest</li>
+        <li>AdaBoost</li>
+        <li>Gradient Boosting</li>
+        <li>Support Vector Machine</li>
+        <li>XGBoost</li>
+        <li>CatBoost</li>
+      </ul>
+    </li>
+
+    <li><strong>Hyperparameter Tuning:</strong> GridSearchCV</li>
+    <li><strong>Train-Test Split:</strong> Used train_test_split() with appropriate random seed</li>
+    <li><strong>Artifacts Saved:</strong> Best model saved for deployment</li>
+  </ul>
+</div>
+
+
+<!-- 7. Model Evaluation -->
+<div class="card shadow p-4 mb-5 bg-white rounded" id="evaluation">
+  <h2 class="fw-bold">7. Model Evaluation</h2>
+
+  <ul class="fs-5">
+    <li><strong>Metrics Used:</strong>
+      <ul>
+        <li>Accuracy Score</li>
+        <li>Jaccard Score</li>
+        <li>Precision</li>
+        <li>Recall</li>
+        <li>F1-Score</li>
+        <li>ROC-AUC</li>
+      </ul>
+    </li>
+
+    <li><strong>Best Model:</strong>
+      <ul>
+        <li>The XGBoost model achieved the highest accuracy score (~88.24%) on test data.</li>
+      </ul>
+    </li>
+
+    <li><strong>The best model's predictions were evaluated via</strong></li>
+      <ul>
+        <li>Confusion Matrix</li>
+        <li>ROC Curve</li>
+        <li>Classification Report</li>
+      </ul>
+  </ul>
+</div>
+
+
+<!-- 8. Conclusion -->
+<div class="card shadow p-4 mb-5 bg-white rounded" id="conclusion">
+  <h2 class="fw-bold">8. Conclusion & Insights</h2>
+  <ul class="fs-5">
+    <li>Launches to <strong>VLEO, LEO, and ISS orbits</strong> have a much higher success rate compared to other orbits, suggesting that higher orbits pose greater challenges for first stage re-landing.</li>
+    <li><strong>KSC LC 39A</strong> and <strong>VAFB SLC 4E</strong> launch sites exhibit significantly higher success rates than <strong>CCSFS SLC 40</strong>, indicating that the launch location plays a crucial role in landing success.</li>
+    <li>A high number of successful landings occurred when components like <strong>GridFins</strong> and <strong>Legs</strong> were used, reaffirming their importance in the recovery process.</li>
+    <li>Without a designated <strong>landing pad</strong>, the success rate is considerably lower.</li>
+    <li>The greater the <strong>payload mass</strong>, the higher the likelihood of a successful first stage landing.</li>
+    <li><strong>Temporal analysis</strong> reveals a clear upward trend in landing success over the years, reflecting SpaceX’s continuous technological improvements.</li>
+  </ul>
+</div>
+
+
+<!-- 9. Deployment -->
+<div class="card shadow p-4 mb-5 bg-white rounded" id="deployment">
+  <h2 class="fw-bold">9. Deployment</h2>
+  <ul class="fs-5">
+    <li>Created a <strong>Flask app</strong> to serve predictions.</li>
+    <li><strong>CustomData</strong> class used to collect and format user input.</li>
+    <li><strong>PredictPipeline</strong> class used to load the saved model and preprocessor.</li>
+    <li>Simple <strong>HTML form</strong> captures user data.</li>
+    <li>Automatically fills <strong>launch site coordinates</strong> (latitude, longitude) based on selection.</li>
+    <li>Hosted on <strong>Render</strong> with automatic deployment from GitHub.</li>
+  </ul>
+</div>
+
+
+<!-- 10. Modular Project Architecture & Engineering Practices -->
+<div class="card shadow p-4 mb-5 bg-white rounded" id="modular">
+  <h2 class="fw-bold">10. Modular Project Architecture & Engineering Practices</h2>
+  <p class="fs-5">
+    This project maintains industry standards by following a modular and scalable architecture:
+  </p>
+
+  <!-- 10.1 Components Breakdown -->
+  <h5 class="fw-bold mt-4" id="components">10.1 Components Breakdown</h5>
+  <ul class="fs-5">
+    <li><strong>data_ingestion.py</strong><br>
+      Handles reading raw data from source (e.g., CSV), splitting it into training and testing sets,
+      and saving these artifacts in the artifacts directory.
+    </li>
+    <li><strong>data_transformation.py</strong><br>
+      Builds preprocessing pipelines using ColumnTransformer, handles categorical and numerical
+      processing, and serializes the preprocessor object for later inference.
+    </li>
+    <li><strong>model_trainer.py</strong><br>
+      Encapsulates model training, evaluation, and hyperparameter tuning. Supports multiple regression
+      algorithms and exports the best-performing model.
+    </li>
+    <li><strong>train_pipeline.py</strong><br>
+      Runs the full model training workflow by calling data ingestion, transformation, and model trainer modules.
+    </li>
+    <li><strong>predict_pipeline.py</strong><br>
+      Loads the saved model and preprocessor to make predictions on new user input collected via the web form.
+    </li>
+  </ul>
+
+  <!-- 10.2 Utility and Support Modules -->
+  <h5 class="fw-bold mt-4" id="support">10.2 Utility and Support Modules</h5>
+  <ul class="fs-5">
+    <li><strong>logger.py</strong><br>
+      Custom logging setup to track pipeline progress, errors, and debugging information.
+    </li>
+    <li><strong>exception.py</strong><br>
+      A custom exception class to wrap and raise errors cleanly across modules for better traceability.
+    </li>
+    <li><strong>utils.py</strong><br>
+      Includes reusable functions like saving and loading objects, evaluating models, and other helper operations.
+    </li>
+  </ul>
+
+  <!-- 10.3 Configuration & Packaging -->
+  <h5 class="fw-bold mt-4" id="configuration">10.3 Configuration & Packaging</h5>
+  <ul class="fs-5">
+    <li><strong>setup.py</strong><br>
+      Makes the project installable as a package. Useful for deployment and future integrations.
+    </li>
+    <li><strong>requirements.txt</strong><br>
+      Lists all Python dependencies used in the project.
+    </li>
+  </ul>
+</div>
+
+
+    <!-- 11. Summary -->
+    <div class="card shadow p-4 mb-5 bg-white rounded" id="summary">
+      <h2 class="fw-bold">11. Summary</h2>
+      <p class="fs-5 text-justify">
+        This project demonstrates a robust, industry-standard machine learning pipeline from data collection from API to deployment. It combines solid EDA, modular engineering practices, and model explainability, making it suitable for both real-world use and demonstrating technical skill in professional settings.
+      </p>
+    </div>
+
+  </main>
+
+  <footer class="text-center py-4">
+    &copy; 2025 S M Bakhtiar &nbsp;|&nbsp;
+    <a href="https://www.linkedin.com/in/durrlov/" target="_blank">LinkedIn</a> &nbsp;|&nbsp;
+    <a href="mailto:bakhtiar.scr@gmail.com">Email</a>
+  </footer>
+
+</body>
+</html>
