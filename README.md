@@ -1,4 +1,4 @@
-# End-to-End Machine Learning Project — SpaceX Falcon 9 Landing Prediction
+# Predict Falcon 9 Booster Landing Success
 **Developed by**: [S M Bakhtiar](https://www.linkedin.com/in/durrlov/)  
 bakhtiar.scr@gmail.com <br>
 [LinkedIn](https://www.linkedin.com/in/durrlov/)
