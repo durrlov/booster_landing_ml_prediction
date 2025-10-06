@@ -13,6 +13,10 @@
 
   <!-- Header -->
   <header class="header">
+    <div class="top-left-side">
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo">
+    </div>
+    
     <div class="top-right-buttons">
       <a href="/" class="nav-button">Home</a>
       <a href="/predictdata" class="nav-button">Live Predictor</a>
@@ -66,7 +70,7 @@
     <div class="card shadow p-4 mb-5 bg-white rounded" id="introduction">
       <h2 class="fw-bold">1. Introduction</h2>
       <p class="fs-5 text-justify">
-        This project showcases an <strong>end-to-end machine learning pipeline</strong> designed to predict whether the <strong>first stage (booster) of a SpaceX Falcon 9 rocket</strong> will successfully re-land.
+        This project showcases an <strong>end-to-end machine learning pipeline</strong> designed to predict whether the <strong>first stage (booster) of a SpaceX Falcon 9 rocket</strong> will successfully land.
       </p>
       <p class="fs-5 text-justify">
         This integrates:
@@ -248,7 +252,7 @@
 <div class="card shadow p-4 mb-5 bg-white rounded" id="conclusion">
   <h2 class="fw-bold">8. Conclusion & Insights</h2>
   <ul class="fs-5">
-    <li>Launches to <strong>VLEO, LEO, and ISS orbits</strong> have a much higher success rate compared to other orbits, suggesting that higher orbits pose greater challenges for first stage re-landing.</li>
+    <li>Launches to <strong>VLEO, LEO, and ISS orbits</strong> have a much higher success rate compared to other orbits, suggesting that higher orbits pose greater challenges for first stage landing.</li>
     <li><strong>KSC LC 39A</strong> and <strong>VAFB SLC 4E</strong> launch sites exhibit significantly higher success rates than <strong>CCSFS SLC 40</strong>, indicating that the launch location plays a crucial role in landing success.</li>
     <li>A high number of successful landings occurred when components like <strong>GridFins</strong> and <strong>Legs</strong> were used, reaffirming their importance in the recovery process.</li>
     <li>Without a designated <strong>landing pad</strong>, the success rate is considerably lower.</li>

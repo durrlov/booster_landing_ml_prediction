@@ -153,3 +153,25 @@ footer {
 .form-submit-button:hover {
   background-color: #09135f;
 }
+
+
+/* Top-left Branding Area */
+.top-left-side {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Optional Logo Styling */
+.top-left-side img {
+  height: 100px;
+  width: auto;
+}
+
+/* Optional Project Title Styling */
+.project-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0;
+}

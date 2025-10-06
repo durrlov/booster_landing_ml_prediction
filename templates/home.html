@@ -13,6 +13,10 @@
 <body>
   <!-- Header -->
   <header class="header">
+    <div class="top-left-side">
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo">
+    </div>
+    
     <div class="top-right-buttons">
       <a href="/" class="nav-button">Home</a>
       <a href="/predictdata" class="nav-button">Live Predictor</a>
@@ -59,7 +63,7 @@
         <!-- Date -->
         <div class="mb-3">
           <label for="Date" class="form-label">Date</label>
-          <input type="date" class="form-control" id="Date" name="Date" required min="2010-01-01" max="2030-12-31">
+          <input type="date" class="form-control" id="Date" name="Date" required min="2010-01-01" max="2030-12-31" >
         </div>
 
         <!-- Booster Version -->

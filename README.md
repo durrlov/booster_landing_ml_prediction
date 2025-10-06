@@ -4,7 +4,7 @@ bakhtiar.scr@gmail.com <br>
 [LinkedIn](https://www.linkedin.com/in/durrlov/)
 
 ## Important Project Links
-### [Try Real-Time Predictions 🔗](http://127.0.0.1:5000/)
+### [Try Real-Time Predictions 🔗](https://bakhtiarproject.onrender.com)
 
 [Exploratory Data Analysis Notebook 🔗](https://github.com/durrlov/booster_landing_ml_prediction/blob/main/notebook/03_eda.ipynb)
 
@@ -132,7 +132,7 @@ Therefore we aim to determine whether the first stage will land successfully or 
     - Classification Report
 
 ## 8. Conclusion & Insights<a name= "conclusion"></a>
-- Launch to VLEO, LEO and ISS orbits have a very high success rate to other orbits, suggesting others are more challenging for re-landing the first stage.
+- Launch to VLEO, LEO and ISS orbits have a very high success rate to other orbits, suggesting others are more challenging for landing the first stage.
 - KSC LC 39A and VAFB SLC 4E launch sites have a much higher success rate compared to CCSFS SLC 40, indicating the launch location is a key factor in landing success.
 - High number of successful landings occurred when components like GridFins, and Legs were used, confirming their importance in the recovery process.
 - Without landing pad, the success rate is very low.
